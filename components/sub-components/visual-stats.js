@@ -11,6 +11,7 @@ import axios from "axios";
 
 import PriceChart from "../charts/price-chart";
 import { TIME_SERIES_MONTHLY_ADJUSTED } from "@/lib/sample-data";
+import ChartTabs from "./chart-tabs";
 
 const VisualStats = () => {
     const [price, setPrice] = useState(null);
@@ -63,7 +64,7 @@ const VisualStats = () => {
                 minH="100%"
                 overflowY="auto"
             >
-                <Heading
+                {/* <Heading
                     as="h2"
                     size="md"
                     textAlign="center"
@@ -73,7 +74,8 @@ const VisualStats = () => {
                 >
                     Monthly Adjusted Close Price
                 </Heading>
-                {price && <PriceChart data={price} />}
+                {price && <PriceChart data={price} />} */}
+                <ChartTabs data={price} />
             </Box>
         </GridItem>
     );

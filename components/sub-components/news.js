@@ -20,6 +20,13 @@ import { NEWS_SENTIMENT } from "@/lib/sample-data";
 const NewsItem = () => {
     const [newsArticles, setNewsArticles] = useState(null);
 
+    const formattedDate = (date) => {
+        const year = date.slice(0, 4);
+        const month = date.slice(4, 6);
+        const day = date.slice(6, 8);
+        return `${year}-${month}-${day}`;
+    };
+
     const fetchNewsArticles = async () => {
         const url = "https://www.alphavantage.co/query";
         const apikey = process.env.ALPHAVANTAGE_API_KEY;
@@ -86,6 +93,13 @@ const NewsItem = () => {
                                 <Heading key={uuidv4()} as="h3" size="sm">
                                     {article?.title}
                                 </Heading>
+                                <Text
+                                    key={uuidv4()}
+                                    fontSize="xs"
+                                    fontStyle="italic"
+                                >
+                                    {formattedDate(article["time_published"])}
+                                </Text>
                                 <Link
                                     fontSize="xs"
                                     href={article?.url}
