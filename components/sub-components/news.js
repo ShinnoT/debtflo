@@ -15,6 +15,7 @@ import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
 import MainStatsDivider from "./stat-divider";
+import { NEWS_SENTIMENT } from "@/lib/sample-data";
 
 const NewsItem = () => {
     const [newsArticles, setNewsArticles] = useState(null);
@@ -31,10 +32,11 @@ const NewsItem = () => {
             },
         };
         try {
-            const res = await axios.get(url, config);
-            const { feed } = res?.data;
+            // TODO: replace mock data with actual API call
+            // const res = await axios.get(url, config);
+            // const { feed } = res?.data;
+            const { feed } = NEWS_SENTIMENT;
             setNewsArticles(feed);
-            console.log(res);
         } catch (error) {
             console.log(error?.response?.data?.error);
         }
@@ -63,6 +65,15 @@ const NewsItem = () => {
                 minH="100%"
                 overflowY="auto"
             >
+                <Heading
+                    as="h2"
+                    size="md"
+                    textAlign="center"
+                    mb={4}
+                    variant="section-title"
+                >
+                    News
+                </Heading>
                 <MainStatsDivider>
                     {newsArticles &&
                         newsArticles.map((article, i) => (

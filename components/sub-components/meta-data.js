@@ -12,11 +12,14 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+
 import MainStatsDivider from "./stat-divider";
+import { OVERVIEW } from "@/lib/sample-data";
 
 const MetaData = () => {
     const [companyMeta, setCompanyMeta] = useState(null);
 
+    // TODO: change below to fetch from alphavantage OVERVIEW as well
     const fetchCompanyMeta = async () => {
         const url = "https://api.marketaux.com/v1/entity/search";
         const api_token = process.env.MARKETAUX_API_KEY;
@@ -27,10 +30,11 @@ const MetaData = () => {
             },
         };
         try {
-            const res = await axios.get(url, config);
-            const { data, meta } = res?.data;
+            // TODO: replace mock data with actual API call
+            // const res = await axios.get(url, config);
+            // const { data, meta } = res?.data;
+            const data = OVERVIEW;
             setCompanyMeta(data);
-            console.log(data);
         } catch (error) {
             console.log(error?.response?.data?.error);
         }
@@ -64,7 +68,72 @@ const MetaData = () => {
                 // align="stretch"
                 // alignContent="stretch"
             >
-                <MainStatsDivider>
+                <Heading
+                    as="h2"
+                    size="md"
+                    textAlign="center"
+                    mb={4}
+                    variant="section-title"
+                >
+                    Company MetaData
+                </Heading>
+                {companyMeta && (
+                    <MainStatsDivider>
+                        <Stack direction="column" align="stretch" spacing={0}>
+                            <Heading as="h3" size="sm">
+                                Company Name
+                            </Heading>
+                            <Text fontSize="xs">{companyMeta["Name"]}</Text>
+                        </Stack>
+
+                        <Stack direction="column" align="stretch" spacing={0}>
+                            <Heading as="h3" size="sm">
+                                Description
+                            </Heading>
+                            <Text fontSize="xs">
+                                {companyMeta["Description"]}
+                            </Text>
+                        </Stack>
+
+                        <Stack direction="column" align="stretch" spacing={0}>
+                            <Heading as="h3" size="sm">
+                                Symbol
+                            </Heading>
+                            <Text fontSize="xs">{companyMeta["Symbol"]}</Text>
+                        </Stack>
+
+                        <Stack direction="column" align="stretch" spacing={0}>
+                            <Heading as="h3" size="sm">
+                                Exchange
+                            </Heading>
+                            <Text fontSize="xs">{companyMeta["Exchange"]}</Text>
+                        </Stack>
+
+                        <Stack direction="column" align="stretch" spacing={0}>
+                            <Heading as="h3" size="sm">
+                                Currency
+                            </Heading>
+                            <Text fontSize="xs">{companyMeta["Currency"]}</Text>
+                        </Stack>
+
+                        {/* <Stat>
+                            <StatLabel>Analyst Target Price</StatLabel>
+                            <StatNumber>
+                                {companyMeta["AnalystTargetPrice"]}
+                            </StatNumber>
+                            <StatHelpText>
+                                <StatArrow type="decrease" />
+                                9.05%
+                            </StatHelpText>
+                        </Stat>
+
+                        <Stat>
+                            <StatLabel>PE Ratio</StatLabel>
+                            <StatNumber>{companyMeta["PERatio"]}</StatNumber>
+                        </Stat> */}
+                    </MainStatsDivider>
+                )}
+                {/* <MainStatsDivider>
                     {companyMeta &&
                         companyMeta.map((company, i) => (
                             <Stack
@@ -93,7 +162,7 @@ const MetaData = () => {
                                 </Text>
                             </Stack>
                         ))}
-                </MainStatsDivider>
+                </MainStatsDivider> */}
             </Box>
         </GridItem>
     );

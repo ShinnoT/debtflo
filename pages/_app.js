@@ -6,6 +6,7 @@ import theme from "@/lib/theme";
 import { Roboto } from "next/font/google";
 
 import LoadingProvider from "@/context/loading";
+import SearchProvider from "@/context/search";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["100", "300"] });
 
@@ -21,7 +22,9 @@ export default function App({ Component, pageProps }) {
             </style>
             <ChakraProvider theme={theme}>
                 <LoadingProvider>
-                    <Component {...pageProps} />
+                    <SearchProvider>
+                        <Component {...pageProps} />
+                    </SearchProvider>
                 </LoadingProvider>
             </ChakraProvider>
         </>

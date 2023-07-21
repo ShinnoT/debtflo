@@ -10,17 +10,19 @@ import {
 import { SearchIcon } from "@chakra-ui/icons";
 
 import { useLoading } from "@/context/loading";
+import { useSearch } from "@/context/search";
 
 // TODO: fix autofocus not working issue
 
 const SearchBar = () => {
     const { loading, setLoading } = useLoading();
+    const { search, setSearch } = useSearch();
 
     const handleSearch = (e) => {
         e.preventDefault();
+        const searchString = e?.target?.search?.value;
         setLoading((prev) => !prev);
-        console.log(e.target.search.value);
-        console.log("is loading?? ", loading);
+        if (searchString) setSearch(searchString);
         e.target.reset();
     };
 

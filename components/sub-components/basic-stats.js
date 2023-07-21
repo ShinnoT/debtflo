@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import MainStatsDivider from "./stat-divider";
+import { OVERVIEW } from "@/lib/sample-data";
 
 const BasicStats = () => {
     const [companyStats, setCompanyStats] = useState(null);
@@ -35,10 +36,11 @@ const BasicStats = () => {
             },
         };
         try {
-            const res = await axios.get(url, config);
-            const { data } = res;
+            // TODO: replace mock data with actual API call
+            // const res = await axios.get(url, config);
+            // const { data } = res;
+            const data = OVERVIEW;
             setCompanyStats(data);
-            console.log(res);
         } catch (error) {
             // TODO: check API docs again to see error output for better handling
             console.log(error);
@@ -68,6 +70,15 @@ const BasicStats = () => {
                 minH="100%"
                 overflowY="auto"
             >
+                <Heading
+                    as="h2"
+                    size="md"
+                    textAlign="center"
+                    mb={4}
+                    variant="section-title"
+                >
+                    Company Stats
+                </Heading>
                 {companyStats && (
                     <MainStatsDivider>
                         <Stat>

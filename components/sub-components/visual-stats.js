@@ -9,6 +9,9 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+import PriceChart from "../charts/price-chart";
+import { TIME_SERIES_MONTHLY_ADJUSTED } from "@/lib/sample-data";
+
 const VisualStats = () => {
     const [price, setPrice] = useState(null);
 
@@ -18,14 +21,19 @@ const VisualStats = () => {
         const config = {
             params: {
                 apikey,
-                function: "TIME_SERIES_DAILY",
+                function: "TIME_SERIES_MONTHLY_ADJUSTED",
                 symbol: "AAPL",
                 datatype: "json",
             },
         };
         try {
-            // const res = await axios.get(url, config);
-            // console.log(res);
+            // TODO: replace mock data with actual API call
+            // const { data } = await axios.get(url, config);
+            const data = TIME_SERIES_MONTHLY_ADJUSTED;
+            const arrayOfObj = Object.entries(
+                data["Monthly Adjusted Time Series"]
+            ).map((e) => ({ date: e[0], ...e[1] }));
+            setPrice(arrayOfObj);
         } catch (error) {
             // TODO: check API docs again to see error output for better handling
             console.log(error);
@@ -55,7 +63,17 @@ const VisualStats = () => {
                 minH="100%"
                 overflowY="auto"
             >
-                {}
+                <Heading
+                    as="h2"
+                    size="md"
+                    textAlign="center"
+                    mb={4}
+                    h="10%"
+                    variant="section-title"
+                >
+                    Monthly Adjusted Close Price
+                </Heading>
+                {price && <PriceChart data={price} />}
             </Box>
         </GridItem>
     );
