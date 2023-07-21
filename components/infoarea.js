@@ -4,6 +4,7 @@ import NewsItem from "./sub-components/news";
 import MetaData from "./sub-components/meta-data";
 import VisualStats from "./sub-components/visual-stats";
 import BasicStats from "./sub-components/basic-stats";
+import OverallNewsSentiment from "./sub-components/overall-news-sentiment";
 
 const InfoArea = () => {
     return (
@@ -19,6 +20,7 @@ const InfoArea = () => {
             <NewsItem />
             <MetaData />
             <BasicStats />
+            <OverallNewsSentiment />
             <VisualStats />
         </Grid>
     );
