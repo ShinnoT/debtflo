@@ -10,15 +10,19 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import PriceChart from "../charts/price-chart";
-import { TIME_SERIES_MONTHLY_ADJUSTED } from "@/lib/sample-data";
+import {
+    TIME_SERIES_MONTHLY_ADJUSTED,
+    NEWS_SENTIMENT,
+} from "@/lib/sample-data";
 import ChartTabs from "./chart-tabs";
 
 const VisualStats = () => {
     const [price, setPrice] = useState(null);
+    const [news, setNews] = useState(null);
+    const url = "https://www.alphavantage.co/query";
+    const apikey = process.env.ALPHAVANTAGE_API_KEY;
 
     const fetchPrices = async () => {
-        const url = "https://www.alphavantage.co/query";
-        const apikey = process.env.ALPHAVANTAGE_API_KEY;
         const config = {
             params: {
                 apikey,
@@ -41,8 +45,29 @@ const VisualStats = () => {
         }
     };
 
+    const fetchNewsArticles = async () => {
+        const config = {
+            params: {
+                apikey,
+                function: "NEWS_SENTIMENT",
+                tickers: "AAPL",
+                limit: 20,
+            },
+        };
+        try {
+            // TODO: replace mock data with actual API call
+            // const res = await axios.get(url, config);
+            // const { feed } = res?.data;
+            const { feed } = NEWS_SENTIMENT;
+            setNews(feed);
+        } catch (error) {
+            console.log(error?.response?.data?.error);
+        }
+    };
+
     useEffect(() => {
         fetchPrices();
+        fetchNewsArticles();
     }, []);
 
     return (
@@ -64,18 +89,7 @@ const VisualStats = () => {
                 minH="100%"
                 overflowY="auto"
             >
-                {/* <Heading
-                    as="h2"
-                    size="md"
-                    textAlign="center"
-                    mb={4}
-                    h="10%"
-                    variant="section-title"
-                >
-                    Monthly Adjusted Close Price
-                </Heading>
-                {price && <PriceChart data={price} />} */}
-                <ChartTabs data={price} />
+                <ChartTabs priceData={price} newsData={news} />
             </Box>
         </GridItem>
     );
