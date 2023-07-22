@@ -14,42 +14,57 @@ import {
     Divider,
     Stack,
     StackDivider,
+    Skeleton,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 import MainStatsDivider from "./stat-divider";
 import { OVERVIEW } from "@/lib/sample-data";
+import { useSearch } from "@/context/search";
+import { useLoaded } from "@/context/loading";
 
 const BasicStats = () => {
+    const { search } = useSearch();
+    const { setGlobalLoaded } = useLoaded();
     const [companyStats, setCompanyStats] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     const fetchStats = async () => {
+        console.log("BASIC STATS - searching for... ", search);
+        setIsLoaded(false);
+        setGlobalLoaded((prev) => ({ ...prev, basicStats: false }));
         const url = "https://www.alphavantage.co/query";
         const apikey = process.env.ALPHAVANTAGE_API_KEY;
         const config = {
             params: {
                 apikey,
                 function: "OVERVIEW",
-                symbol: "AAPL",
+                symbol: search,
                 datatype: "json",
             },
         };
         try {
             // TODO: replace mock data with actual API call
-            // const res = await axios.get(url, config);
-            // const { data } = res;
-            const data = OVERVIEW;
+            const res = await axios.get(url, config);
+            const { data } = res;
+            // const data = OVERVIEW;
             setCompanyStats(data);
+            setTimeout(() => {
+                setIsLoaded(true);
+                setGlobalLoaded((prev) => ({ ...prev, basicStats: true }));
+            }, 5000);
         } catch (error) {
             // TODO: check API docs again to see error output for better handling
             console.log(error);
+            setIsLoaded(false);
+            setGlobalLoaded((prev) => ({ ...prev, basicStats: false }));
         }
     };
 
     useEffect(() => {
-        fetchStats();
-    }, []);
+        if (search) fetchStats();
+    }, [search]);
 
     return (
         <GridItem
@@ -79,36 +94,61 @@ const BasicStats = () => {
                 >
                     Company Stats
                 </Heading>
-                {companyStats && (
-                    <MainStatsDivider>
-                        <Stat>
+
+                {/* {companyStats && ( */}
+                <MainStatsDivider>
+                    <Stat>
+                        <Skeleton
+                            isLoaded={isLoaded}
+                            fadeDuration={1}
+                            startColor="green.400"
+                            endColor="pink.400"
+                        >
                             <StatLabel>50 Day Moving Average</StatLabel>
                             <StatNumber>
-                                {companyStats["50DayMovingAverage"]}
+                                {companyStats &&
+                                    companyStats["50DayMovingAverage"]}
                             </StatNumber>
                             <StatHelpText>
                                 <StatArrow type="increase" />
                                 23.36%
                             </StatHelpText>
-                        </Stat>
+                        </Skeleton>
+                    </Stat>
 
-                        <Stat>
+                    <Stat>
+                        <Skeleton
+                            isLoaded={isLoaded}
+                            fadeDuration={1}
+                            startColor="green.400"
+                            endColor="pink.400"
+                        >
                             <StatLabel>Analyst Target Price</StatLabel>
                             <StatNumber>
-                                {companyStats["AnalystTargetPrice"]}
+                                {companyStats &&
+                                    companyStats["AnalystTargetPrice"]}
                             </StatNumber>
                             <StatHelpText>
                                 <StatArrow type="decrease" />
                                 9.05%
                             </StatHelpText>
-                        </Stat>
+                        </Skeleton>
+                    </Stat>
 
-                        <Stat>
+                    <Stat>
+                        <Skeleton
+                            isLoaded={isLoaded}
+                            fadeDuration={1}
+                            startColor="green.400"
+                            endColor="pink.400"
+                        >
                             <StatLabel>PE Ratio</StatLabel>
-                            <StatNumber>{companyStats["PERatio"]}</StatNumber>
-                        </Stat>
-                    </MainStatsDivider>
-                )}
+                            <StatNumber>
+                                {companyStats && companyStats["PERatio"]}
+                            </StatNumber>
+                        </Skeleton>
+                    </Stat>
+                </MainStatsDivider>
             </Box>
         </GridItem>
     );

@@ -34,8 +34,6 @@ const SentimentChart = ({ data }) => {
 
     const sentimentScore = intData.map((newsData) => newsData.sentiment_score);
 
-    console.log(intData);
-
     return (
         <ResponsiveContainer width="100%" height="100%">
             <LineChart
@@ -77,7 +75,6 @@ const SentimentChart = ({ data }) => {
                     fill="blue"
                     fillOpacity={0.1}
                     ifOverflow="hidden"
-                    label="Bullish"
                 />
                 <ReferenceArea
                     y1={0}
@@ -88,7 +85,6 @@ const SentimentChart = ({ data }) => {
                     fill="red"
                     fillOpacity={0.1}
                     ifOverflow="hidden"
-                    label="Bearish"
                 />
             </LineChart>
         </ResponsiveContainer>

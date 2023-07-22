@@ -14,6 +14,7 @@ import {
     Divider,
     Stack,
     StackDivider,
+    Skeleton,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -21,10 +22,15 @@ import axios from "axios";
 import MainStatsDivider from "./stat-divider";
 import { NEWS_SENTIMENT } from "@/lib/sample-data";
 import { TriangleUpIcon } from "@chakra-ui/icons";
+import { useSearch } from "@/context/search";
+import { useLoaded } from "@/context/loading";
 
 const OverallNewsSentiment = () => {
+    const { search } = useSearch();
     const [sentimentScore, setSentimentScore] = useState(null);
     const [sentimentLabel, setSentimentLabel] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const { setGlobalLoaded } = useLoaded();
 
     const calculateSentimentScore = (feed) => {
         const sentimentArr = feed.map(
@@ -45,35 +51,45 @@ const OverallNewsSentiment = () => {
     };
 
     const fetchNewsArticles = async () => {
+        setIsLoaded(false);
+        setGlobalLoaded((prev) => ({ ...prev, sentimentScore: false }));
+        console.log("OVERALL NEWS SENTIMENT - searching for... ", search);
         const url = "https://www.alphavantage.co/query";
         const apikey = process.env.ALPHAVANTAGE_API_KEY;
         const config = {
             params: {
                 apikey,
                 function: "NEWS_SENTIMENT",
-                tickers: "AAPL",
+                tickers: search,
                 limit: 20,
             },
         };
         try {
             // TODO: replace mock data with actual API call
-            // const res = await axios.get(url, config);
-            // const { feed } = res?.data;
-            const { feed } = NEWS_SENTIMENT;
+            const res = await axios.get(url, config);
+            const { feed } = res?.data;
+            // const { feed } = NEWS_SENTIMENT;
             const avgSentimentScore = calculateSentimentScore(feed);
             const sentimentLabelString =
                 generateSentimentLabel(avgSentimentScore);
-            console.log(sentimentLabelString);
             setSentimentScore(avgSentimentScore) ||
                 setSentimentLabel(sentimentLabelString);
+
+            setTimeout(() => {
+                setIsLoaded(true);
+                setGlobalLoaded((prev) => ({ ...prev, sentimentScore: true }));
+            }, 10000);
         } catch (error) {
-            console.log(error?.response?.data?.error);
+            // TODO: check API docs again to see error output for better handling
+            console.log(error);
+            setIsLoaded(false);
+            setGlobalLoaded((prev) => ({ ...prev, sentimentScore: false }));
         }
     };
 
     useEffect(() => {
-        fetchNewsArticles();
-    }, []);
+        if (search) fetchNewsArticles();
+    }, [search]);
 
     return (
         <GridItem
@@ -103,24 +119,30 @@ const OverallNewsSentiment = () => {
                 >
                     Overall Sentiment
                 </Heading>
-                <Stat>
-                    <StatNumber>
-                        {sentimentScore}
-                        {/* <TriangleUpIcon
-                            color={sentimentScore > 0 ? "green.400" : "red.400"}
-                        /> */}
-                    </StatNumber>
-                    <StatHelpText>
-                        {sentimentLabel}{" "}
-                        {sentimentLabel !== "Neutral" && (
-                            <StatArrow
-                                type={
-                                    sentimentScore > 0 ? "increase" : "decrease"
-                                }
-                            />
-                        )}
-                    </StatHelpText>
-                </Stat>
+                <Skeleton
+                    isLoaded={isLoaded}
+                    fadeDuration={1}
+                    startColor="green.400"
+                    endColor="pink.400"
+                >
+                    <Stat>
+                        <StatNumber>
+                            {sentimentScore || "Placeholder"}
+                        </StatNumber>
+                        <StatHelpText>
+                            {sentimentLabel || "Placeholder"}{" "}
+                            {sentimentLabel && sentimentLabel !== "Neutral" && (
+                                <StatArrow
+                                    type={
+                                        sentimentScore > 0
+                                            ? "increase"
+                                            : "decrease"
+                                    }
+                                />
+                            )}
+                        </StatHelpText>
+                    </Stat>
+                </Skeleton>
             </Box>
         </GridItem>
     );

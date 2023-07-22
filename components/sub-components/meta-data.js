@@ -8,6 +8,7 @@ import {
     Divider,
     Stack,
     StackDivider,
+    Skeleton,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -15,34 +16,51 @@ import { v4 as uuidv4 } from "uuid";
 
 import MainStatsDivider from "./stat-divider";
 import { OVERVIEW } from "@/lib/sample-data";
+import { useSearch } from "@/context/search";
+import { useLoaded } from "@/context/loading";
 
 const MetaData = () => {
+    const { search } = useSearch();
     const [companyMeta, setCompanyMeta] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const { setGlobalLoaded } = useLoaded();
 
     // TODO: change below to fetch from alphavantage OVERVIEW as well
     const fetchCompanyMeta = async () => {
-        const url = "https://api.marketaux.com/v1/entity/search";
-        const api_token = process.env.MARKETAUX_API_KEY;
+        setIsLoaded(false);
+        setGlobalLoaded((prev) => ({ ...prev, metaData: false }));
+        console.log("META DATA - searching for... ", search);
+        const url = "https://www.alphavantage.co/query";
+        const apikey = process.env.ALPHAVANTAGE_API_KEY;
         const config = {
             params: {
-                api_token,
-                symbols: "AAPL",
+                apikey,
+                function: "OVERVIEW",
+                symbol: search,
+                datatype: "json",
             },
         };
         try {
             // TODO: replace mock data with actual API call
-            // const res = await axios.get(url, config);
-            // const { data, meta } = res?.data;
-            const data = OVERVIEW;
+            const res = await axios.get(url, config);
+            const { data, meta } = res;
+            // const data = OVERVIEW;
             setCompanyMeta(data);
+            setTimeout(() => {
+                setIsLoaded(true);
+                setGlobalLoaded((prev) => ({ ...prev, metaData: true }));
+            }, 10000);
         } catch (error) {
-            console.log(error?.response?.data?.error);
+            // TODO: check API docs again to see error output for better handling
+            console.log(error);
+            setIsLoaded(false);
+            setGlobalLoaded((prev) => ({ ...prev, metaData: false }));
         }
     };
 
     useEffect(() => {
-        fetchCompanyMeta();
-    }, []);
+        if (search) fetchCompanyMeta();
+    }, [search]);
 
     return (
         <GridItem
@@ -77,92 +95,88 @@ const MetaData = () => {
                 >
                     Company MetaData
                 </Heading>
-                {companyMeta && (
-                    <MainStatsDivider>
-                        <Stack direction="column" align="stretch" spacing={0}>
+                {/* {companyMeta && ( */}
+                <MainStatsDivider>
+                    <Stack direction="column" align="stretch" spacing={0}>
+                        <Skeleton
+                            isLoaded={isLoaded}
+                            fadeDuration={1}
+                            startColor="green.400"
+                            endColor="pink.400"
+                        >
                             <Heading as="h3" size="sm">
                                 Company Name
                             </Heading>
-                            <Text fontSize="xs">{companyMeta["Name"]}</Text>
-                        </Stack>
+                            <Text fontSize="xs">
+                                {companyMeta && companyMeta["Name"]}
+                            </Text>
+                        </Skeleton>
+                    </Stack>
 
-                        <Stack direction="column" align="stretch" spacing={0}>
+                    <Stack direction="column" align="stretch" spacing={0}>
+                        <Skeleton
+                            isLoaded={isLoaded}
+                            fadeDuration={1}
+                            startColor="green.400"
+                            endColor="pink.400"
+                        >
                             <Heading as="h3" size="sm">
                                 Description
                             </Heading>
                             <Text fontSize="xs">
-                                {companyMeta["Description"]}
+                                {companyMeta && companyMeta["Description"]}
                             </Text>
-                        </Stack>
+                        </Skeleton>
+                    </Stack>
 
-                        <Stack direction="column" align="stretch" spacing={0}>
+                    <Stack direction="column" align="stretch" spacing={0}>
+                        <Skeleton
+                            isLoaded={isLoaded}
+                            fadeDuration={1}
+                            startColor="green.400"
+                            endColor="pink.400"
+                        >
                             <Heading as="h3" size="sm">
                                 Symbol
                             </Heading>
-                            <Text fontSize="xs">{companyMeta["Symbol"]}</Text>
-                        </Stack>
+                            <Text fontSize="xs">
+                                {companyMeta && companyMeta["Symbol"]}
+                            </Text>
+                        </Skeleton>
+                    </Stack>
 
-                        <Stack direction="column" align="stretch" spacing={0}>
+                    <Stack direction="column" align="stretch" spacing={0}>
+                        <Skeleton
+                            isLoaded={isLoaded}
+                            fadeDuration={1}
+                            startColor="green.400"
+                            endColor="pink.400"
+                        >
                             <Heading as="h3" size="sm">
                                 Exchange
                             </Heading>
-                            <Text fontSize="xs">{companyMeta["Exchange"]}</Text>
-                        </Stack>
+                            <Text fontSize="xs">
+                                {companyMeta && companyMeta["Exchange"]}
+                            </Text>
+                        </Skeleton>
+                    </Stack>
 
-                        <Stack direction="column" align="stretch" spacing={0}>
+                    <Stack direction="column" align="stretch" spacing={0}>
+                        <Skeleton
+                            isLoaded={isLoaded}
+                            fadeDuration={1}
+                            startColor="green.400"
+                            endColor="pink.400"
+                        >
                             <Heading as="h3" size="sm">
                                 Currency
                             </Heading>
-                            <Text fontSize="xs">{companyMeta["Currency"]}</Text>
-                        </Stack>
-
-                        {/* <Stat>
-                            <StatLabel>Analyst Target Price</StatLabel>
-                            <StatNumber>
-                                {companyMeta["AnalystTargetPrice"]}
-                            </StatNumber>
-                            <StatHelpText>
-                                <StatArrow type="decrease" />
-                                9.05%
-                            </StatHelpText>
-                        </Stat>
-
-                        <Stat>
-                            <StatLabel>PE Ratio</StatLabel>
-                            <StatNumber>{companyMeta["PERatio"]}</StatNumber>
-                        </Stat> */}
-                    </MainStatsDivider>
-                )}
-                {/* <MainStatsDivider>
-                    {companyMeta &&
-                        companyMeta.map((company, i) => (
-                            <Stack
-                                direction="column"
-                                key={uuidv4()}
-                                align="stretch"
-                                spacing={0}
-                            >
-                                <Heading key={uuidv4()} as="h3" size="sm">
-                                    {company?.name}
-                                </Heading>
-                                <Text fontSize="xs" key={uuidv4()}>
-                                    Symbol: {company?.symbol}
-                                </Text>
-                                <Text key={uuidv4()} fontSize="xs">
-                                    Type: {company?.type}
-                                </Text>
-                                <Text key={uuidv4()} fontSize="xs">
-                                    Industry: {company?.industry}
-                                </Text>
-                                <Text key={uuidv4()} fontSize="xs">
-                                    Exchange: {company?.exchange}
-                                </Text>
-                                <Text key={uuidv4()} fontSize="xs">
-                                    Country: {company?.country}
-                                </Text>
-                            </Stack>
-                        ))}
-                </MainStatsDivider> */}
+                            <Text fontSize="xs">
+                                {companyMeta && companyMeta["Currency"]}
+                            </Text>
+                        </Skeleton>
+                    </Stack>
+                </MainStatsDivider>
             </Box>
         </GridItem>
     );

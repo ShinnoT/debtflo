@@ -9,19 +9,18 @@ import {
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 
-import { useLoading } from "@/context/loading";
+import { useLoaded } from "@/context/loading";
 import { useSearch } from "@/context/search";
 
 // TODO: fix autofocus not working issue
 
 const SearchBar = () => {
-    const { loading, setLoading } = useLoading();
+    const { globalLoaded } = useLoaded();
     const { search, setSearch } = useSearch();
 
     const handleSearch = (e) => {
         e.preventDefault();
         const searchString = e?.target?.search?.value;
-        setLoading((prev) => !prev);
         if (searchString) setSearch(searchString);
         e.target.reset();
     };
@@ -40,7 +39,12 @@ const SearchBar = () => {
                         autoFocus={true}
                     />
                     <InputRightElement width="4.5rem">
-                        {loading ? (
+                        {!globalLoaded.basicStats ||
+                        !globalLoaded.keyDates ||
+                        !globalLoaded.metaData ||
+                        !globalLoaded.sentimentScore ||
+                        !globalLoaded.news ||
+                        !globalLoaded.visualStats ? (
                             <Button isLoading size="xs">
                                 search
                             </Button>

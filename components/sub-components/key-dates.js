@@ -8,6 +8,7 @@ import {
     Divider,
     Stack,
     StackDivider,
+    Skeleton,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -15,34 +16,51 @@ import { v4 as uuidv4 } from "uuid";
 
 import MainStatsDivider from "./stat-divider";
 import { OVERVIEW } from "@/lib/sample-data";
+import { useSearch } from "@/context/search";
+import { useLoaded } from "@/context/loading";
 
 const KeyDates = () => {
+    const { search } = useSearch();
     const [companyMeta, setCompanyMeta] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const { setGlobalLoaded } = useLoaded();
 
     // TODO: change below to fetch from alphavantage OVERVIEW as well
     const fetchCompanyMeta = async () => {
-        const url = "https://api.marketaux.com/v1/entity/search";
-        const api_token = process.env.MARKETAUX_API_KEY;
+        setIsLoaded(false);
+        setGlobalLoaded((prev) => ({ ...prev, KeyDates: false }));
+        console.log("KEY DATES - searching for... ", search);
+        const url = "https://www.alphavantage.co/query";
+        const apikey = process.env.ALPHAVANTAGE_API_KEY;
         const config = {
             params: {
-                api_token,
-                symbols: "AAPL",
+                apikey,
+                function: "OVERVIEW",
+                symbol: search,
+                datatype: "json",
             },
         };
         try {
             // TODO: replace mock data with actual API call
-            // const res = await axios.get(url, config);
-            // const { data, meta } = res?.data;
-            const data = OVERVIEW;
+            const res = await axios.get(url, config);
+            const { data, meta } = res;
+            // const data = OVERVIEW;
             setCompanyMeta(data);
+            setTimeout(() => {
+                setIsLoaded(true);
+                setGlobalLoaded((prev) => ({ ...prev, KeyDates: true }));
+            }, 5000);
         } catch (error) {
-            console.log(error?.response?.data?.error);
+            // TODO: check API docs again to see error output for better handling
+            console.log(error);
+            setIsLoaded(false);
+            setGlobalLoaded((prev) => ({ ...prev, KeyDates: false }));
         }
     };
 
     useEffect(() => {
-        fetchCompanyMeta();
-    }, []);
+        if (search) fetchCompanyMeta();
+    }, [search]);
 
     return (
         <GridItem
@@ -72,45 +90,72 @@ const KeyDates = () => {
                 >
                     Key Dates
                 </Heading>
-                {companyMeta && (
-                    <MainStatsDivider>
-                        <Stack direction="column" align="stretch" spacing={0}>
+                {/* {companyMeta && ( */}
+                <MainStatsDivider>
+                    <Stack direction="column" align="stretch" spacing={0}>
+                        <Skeleton
+                            isLoaded={isLoaded}
+                            fadeDuration={1}
+                            startColor="green.400"
+                            endColor="pink.400"
+                        >
                             <Heading as="h3" size="sm">
                                 Latest Quarter
                             </Heading>
                             <Text fontSize="xs">
-                                {companyMeta["LatestQuarter"]}
+                                {companyMeta && companyMeta["LatestQuarter"]}
                             </Text>
-                        </Stack>
+                        </Skeleton>
+                    </Stack>
 
-                        <Stack direction="column" align="stretch" spacing={0}>
+                    <Stack direction="column" align="stretch" spacing={0}>
+                        <Skeleton
+                            isLoaded={isLoaded}
+                            fadeDuration={1}
+                            startColor="green.400"
+                            endColor="pink.400"
+                        >
                             <Heading as="h3" size="sm">
                                 Dividend Date
                             </Heading>
                             <Text fontSize="xs">
-                                {companyMeta["DividendDate"]}
+                                {companyMeta && companyMeta["DividendDate"]}
                             </Text>
-                        </Stack>
+                        </Skeleton>
+                    </Stack>
 
-                        <Stack direction="column" align="stretch" spacing={0}>
+                    <Stack direction="column" align="stretch" spacing={0}>
+                        <Skeleton
+                            isLoaded={isLoaded}
+                            fadeDuration={1}
+                            startColor="green.400"
+                            endColor="pink.400"
+                        >
                             <Heading as="h3" size="sm">
                                 Ex Dividend Date
                             </Heading>
                             <Text fontSize="xs">
-                                {companyMeta["ExDividendDate"]}
+                                {companyMeta && companyMeta["ExDividendDate"]}
                             </Text>
-                        </Stack>
+                        </Skeleton>
+                    </Stack>
 
-                        <Stack direction="column" align="stretch" spacing={0}>
+                    <Stack direction="column" align="stretch" spacing={0}>
+                        <Skeleton
+                            isLoaded={isLoaded}
+                            fadeDuration={1}
+                            startColor="green.400"
+                            endColor="pink.400"
+                        >
                             <Heading as="h3" size="sm">
                                 Fiscal Year End
                             </Heading>
                             <Text fontSize="xs">
-                                {companyMeta["FiscalYearEnd"]}
+                                {companyMeta && companyMeta["FiscalYearEnd"]}
                             </Text>
-                        </Stack>
-                    </MainStatsDivider>
-                )}
+                        </Skeleton>
+                    </Stack>
+                </MainStatsDivider>
             </Box>
         </GridItem>
     );
