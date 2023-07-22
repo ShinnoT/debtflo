@@ -20,11 +20,8 @@ import { NEWS_SENTIMENT } from "@/lib/sample-data";
 import { useSearch } from "@/context/search";
 import { useLoaded } from "@/context/loading";
 
-const NewsItem = () => {
-    const { search } = useSearch();
-    const [newsArticles, setNewsArticles] = useState(null);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const { setGlobalLoaded } = useLoaded();
+const NewsItem = ({ data }) => {
+    const { globalLoaded } = useLoaded();
 
     const formattedDate = (date) => {
         const year = date.slice(0, 4);
@@ -32,49 +29,6 @@ const NewsItem = () => {
         const day = date.slice(6, 8);
         return `${year}-${month}-${day}`;
     };
-
-    const fetchNewsArticles = async () => {
-        setIsLoaded(false);
-        setGlobalLoaded((prev) => ({ ...prev, news: false }));
-        console.log("NEWS - searching for... ", search);
-        const url = "https://www.alphavantage.co/query";
-        const apikey = process.env.ALPHAVANTAGE_API_KEY;
-        const config = {
-            params: {
-                apikey,
-                function: "NEWS_SENTIMENT",
-                tickers: search,
-                limit: 20,
-            },
-        };
-        try {
-            // TODO: replace mock data with actual API call
-            const res = await axios.get(url, config);
-            console.log("==== ", res);
-            const { feed } = res?.data;
-            // const { feed } = NEWS_SENTIMENT;
-            setNewsArticles(feed);
-            setTimeout(() => {
-                setIsLoaded(true);
-                setGlobalLoaded((prev) => ({ ...prev, news: true }));
-            }, 5000);
-        } catch (error) {
-            // TODO: check API docs again to see error output for better handling
-            console.log(error);
-            setIsLoaded(false);
-            setGlobalLoaded((prev) => ({ ...prev, news: false }));
-        }
-    };
-
-    useEffect(() => {
-        if (search) {
-            setIsLoaded(false);
-            setGlobalLoaded((prev) => ({ ...prev, news: false }));
-            setTimeout(() => {
-                fetchNewsArticles();
-            }, 60000);
-        }
-    }, [search]);
 
     return (
         <GridItem
@@ -105,7 +59,7 @@ const NewsItem = () => {
                     News
                 </Heading>
                 <Skeleton
-                    isLoaded={isLoaded}
+                    isLoaded={globalLoaded}
                     fadeDuration={1}
                     startColor="green.400"
                     endColor="pink.400"
@@ -113,8 +67,8 @@ const NewsItem = () => {
                     minHeight="90%"
                 >
                     <MainStatsDivider>
-                        {newsArticles &&
-                            newsArticles.map((article, i) => (
+                        {data &&
+                            data?.NEWS?.data?.feed.map((article, i) => (
                                 <Stack
                                     direction="column"
                                     key={uuidv4()}

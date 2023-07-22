@@ -7,6 +7,7 @@ import { Roboto } from "next/font/google";
 
 import LoadingProvider from "@/context/loading";
 import SearchProvider from "@/context/search";
+import ErrorProvider from "@/context/error";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["100", "300"] });
 
@@ -23,7 +24,9 @@ export default function App({ Component, pageProps }) {
             <ChakraProvider theme={theme}>
                 <LoadingProvider>
                     <SearchProvider>
-                        <Component {...pageProps} />
+                        <ErrorProvider>
+                            <Component {...pageProps} />
+                        </ErrorProvider>
                     </SearchProvider>
                 </LoadingProvider>
             </ChakraProvider>

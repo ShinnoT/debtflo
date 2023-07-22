@@ -19,48 +19,8 @@ import { OVERVIEW } from "@/lib/sample-data";
 import { useSearch } from "@/context/search";
 import { useLoaded } from "@/context/loading";
 
-const KeyDates = () => {
-    const { search } = useSearch();
-    const [companyMeta, setCompanyMeta] = useState(null);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const { setGlobalLoaded } = useLoaded();
-
-    // TODO: change below to fetch from alphavantage OVERVIEW as well
-    const fetchCompanyMeta = async () => {
-        setIsLoaded(false);
-        setGlobalLoaded((prev) => ({ ...prev, KeyDates: false }));
-        console.log("KEY DATES - searching for... ", search);
-        const url = "https://www.alphavantage.co/query";
-        const apikey = process.env.ALPHAVANTAGE_API_KEY;
-        const config = {
-            params: {
-                apikey,
-                function: "OVERVIEW",
-                symbol: search,
-                datatype: "json",
-            },
-        };
-        try {
-            // TODO: replace mock data with actual API call
-            const res = await axios.get(url, config);
-            const { data, meta } = res;
-            // const data = OVERVIEW;
-            setCompanyMeta(data);
-            setTimeout(() => {
-                setIsLoaded(true);
-                setGlobalLoaded((prev) => ({ ...prev, KeyDates: true }));
-            }, 5000);
-        } catch (error) {
-            // TODO: check API docs again to see error output for better handling
-            console.log(error);
-            setIsLoaded(false);
-            setGlobalLoaded((prev) => ({ ...prev, KeyDates: false }));
-        }
-    };
-
-    useEffect(() => {
-        if (search) fetchCompanyMeta();
-    }, [search]);
+const KeyDates = ({ data }) => {
+    const { globalLoaded } = useLoaded();
 
     return (
         <GridItem
@@ -94,7 +54,7 @@ const KeyDates = () => {
                 <MainStatsDivider>
                     <Stack direction="column" align="stretch" spacing={0}>
                         <Skeleton
-                            isLoaded={isLoaded}
+                            isLoaded={globalLoaded}
                             fadeDuration={1}
                             startColor="green.400"
                             endColor="pink.400"
@@ -103,14 +63,14 @@ const KeyDates = () => {
                                 Latest Quarter
                             </Heading>
                             <Text fontSize="xs">
-                                {companyMeta && companyMeta["LatestQuarter"]}
+                                {data && data?.OVERVIEW?.data["LatestQuarter"]}
                             </Text>
                         </Skeleton>
                     </Stack>
 
                     <Stack direction="column" align="stretch" spacing={0}>
                         <Skeleton
-                            isLoaded={isLoaded}
+                            isLoaded={globalLoaded}
                             fadeDuration={1}
                             startColor="green.400"
                             endColor="pink.400"
@@ -119,14 +79,14 @@ const KeyDates = () => {
                                 Dividend Date
                             </Heading>
                             <Text fontSize="xs">
-                                {companyMeta && companyMeta["DividendDate"]}
+                                {data && data?.OVERVIEW?.data["DividendDate"]}
                             </Text>
                         </Skeleton>
                     </Stack>
 
                     <Stack direction="column" align="stretch" spacing={0}>
                         <Skeleton
-                            isLoaded={isLoaded}
+                            isLoaded={globalLoaded}
                             fadeDuration={1}
                             startColor="green.400"
                             endColor="pink.400"
@@ -135,14 +95,14 @@ const KeyDates = () => {
                                 Ex Dividend Date
                             </Heading>
                             <Text fontSize="xs">
-                                {companyMeta && companyMeta["ExDividendDate"]}
+                                {data && data?.OVERVIEW?.data["ExDividendDate"]}
                             </Text>
                         </Skeleton>
                     </Stack>
 
                     <Stack direction="column" align="stretch" spacing={0}>
                         <Skeleton
-                            isLoaded={isLoaded}
+                            isLoaded={globalLoaded}
                             fadeDuration={1}
                             startColor="green.400"
                             endColor="pink.400"
@@ -151,7 +111,7 @@ const KeyDates = () => {
                                 Fiscal Year End
                             </Heading>
                             <Text fontSize="xs">
-                                {companyMeta && companyMeta["FiscalYearEnd"]}
+                                {data && data?.OVERVIEW?.data["FiscalYearEnd"]}
                             </Text>
                         </Skeleton>
                     </Stack>

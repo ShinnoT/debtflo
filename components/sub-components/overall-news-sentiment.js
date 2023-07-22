@@ -25,12 +25,10 @@ import { TriangleUpIcon } from "@chakra-ui/icons";
 import { useSearch } from "@/context/search";
 import { useLoaded } from "@/context/loading";
 
-const OverallNewsSentiment = () => {
-    const { search } = useSearch();
+const OverallNewsSentiment = ({ data }) => {
+    const { globalLoaded } = useLoaded();
     const [sentimentScore, setSentimentScore] = useState(null);
     const [sentimentLabel, setSentimentLabel] = useState(null);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const { setGlobalLoaded } = useLoaded();
 
     const calculateSentimentScore = (feed) => {
         const sentimentArr = feed.map(
@@ -50,46 +48,18 @@ const OverallNewsSentiment = () => {
         if (avgScore >= 0.35) return "Bullish";
     };
 
-    const fetchNewsArticles = async () => {
-        setIsLoaded(false);
-        setGlobalLoaded((prev) => ({ ...prev, sentimentScore: false }));
-        console.log("OVERALL NEWS SENTIMENT - searching for... ", search);
-        const url = "https://www.alphavantage.co/query";
-        const apikey = process.env.ALPHAVANTAGE_API_KEY;
-        const config = {
-            params: {
-                apikey,
-                function: "NEWS_SENTIMENT",
-                tickers: search,
-                limit: 20,
-            },
-        };
-        try {
-            // TODO: replace mock data with actual API call
-            const res = await axios.get(url, config);
-            const { feed } = res?.data;
-            // const { feed } = NEWS_SENTIMENT;
-            const avgSentimentScore = calculateSentimentScore(feed);
-            const sentimentLabelString =
-                generateSentimentLabel(avgSentimentScore);
-            setSentimentScore(avgSentimentScore) ||
-                setSentimentLabel(sentimentLabelString);
-
-            setTimeout(() => {
-                setIsLoaded(true);
-                setGlobalLoaded((prev) => ({ ...prev, sentimentScore: true }));
-            }, 10000);
-        } catch (error) {
-            // TODO: check API docs again to see error output for better handling
-            console.log(error);
-            setIsLoaded(false);
-            setGlobalLoaded((prev) => ({ ...prev, sentimentScore: false }));
-        }
+    const calcSentiment = async () => {
+        const avgSentimentScore = calculateSentimentScore(
+            data?.NEWS?.data?.feed
+        );
+        const sentimentLabelString = generateSentimentLabel(avgSentimentScore);
+        setSentimentScore(avgSentimentScore) ||
+            setSentimentLabel(sentimentLabelString);
     };
 
     useEffect(() => {
-        if (search) fetchNewsArticles();
-    }, [search]);
+        if (data) calcSentiment();
+    }, [data]);
 
     return (
         <GridItem
@@ -120,7 +90,7 @@ const OverallNewsSentiment = () => {
                     Overall Sentiment
                 </Heading>
                 <Skeleton
-                    isLoaded={isLoaded}
+                    isLoaded={globalLoaded}
                     fadeDuration={1}
                     startColor="green.400"
                     endColor="pink.400"

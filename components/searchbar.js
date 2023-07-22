@@ -9,21 +9,33 @@ import {
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 
+import { useEffect, useState } from "react";
+
 import { useLoaded } from "@/context/loading";
 import { useSearch } from "@/context/search";
+import { useGlobalError } from "@/context/error";
 
 // TODO: fix autofocus not working issue
 
 const SearchBar = () => {
     const { globalLoaded } = useLoaded();
     const { search, setSearch } = useSearch();
+    const { globalError } = useGlobalError();
+    const [localLoaded, setLocalLoaded] = useState(true);
 
     const handleSearch = (e) => {
         e.preventDefault();
+        setLocalLoaded(false);
         const searchString = e?.target?.search?.value;
         if (searchString) setSearch(searchString);
         e.target.reset();
     };
+
+    useEffect(() => {
+        const globalErrorEmpty = !globalError.title || !globalError.message;
+        if (globalLoaded && !localLoaded) setLocalLoaded(true);
+        if (!localLoaded && !globalErrorEmpty) setLocalLoaded(true);
+    }, [globalLoaded, globalError]);
 
     return (
         <form style={{ width: "100%" }} onSubmit={handleSearch}>
@@ -39,12 +51,7 @@ const SearchBar = () => {
                         autoFocus={true}
                     />
                     <InputRightElement width="4.5rem">
-                        {!globalLoaded.basicStats ||
-                        !globalLoaded.keyDates ||
-                        !globalLoaded.metaData ||
-                        !globalLoaded.sentimentScore ||
-                        !globalLoaded.news ||
-                        !globalLoaded.visualStats ? (
+                        {/* {!localLoaded && !globalError ? (
                             <Button isLoading size="xs">
                                 search
                             </Button>
@@ -52,7 +59,14 @@ const SearchBar = () => {
                             <Button type="submit" size="xs">
                                 search
                             </Button>
-                        )}
+                        )} */}
+                        <Button
+                            type="submit"
+                            size="xs"
+                            isLoading={!localLoaded}
+                        >
+                            search
+                        </Button>
                     </InputRightElement>
                 </InputGroup>
             </FormControl>
