@@ -1,6 +1,8 @@
 import { background, useColorModeValue, Heading } from "@chakra-ui/react";
 import {
     LineChart,
+    BarChart,
+    Bar,
     Line,
     Tooltip,
     XAxis,
@@ -23,20 +25,20 @@ const SentimentChart = ({ data }) => {
 
     const intData =
         data &&
-        data.map((newsData) => ({
-            sentiment_score: newsData["overall_sentiment_score"],
-            date: formattedDate(newsData["time_published"]),
-            source: newsData["source"],
-        }));
-    // .sort((n1, n2) =>
-    //     n1.date < n2.date ? 1 : n1.date > n2.date ? -1 : 0
-    // )
-
-    const sentimentScore = intData.map((newsData) => newsData.sentiment_score);
+        data
+            .map((newsData) => ({
+                sentiment_score: newsData["overall_sentiment_score"],
+                date: formattedDate(newsData["time_published"]),
+                source: newsData["source"],
+            }))
+            .sort((n1, n2) =>
+                n1.date < n2.date ? 1 : n1.date > n2.date ? -1 : 0
+            )
+            .reverse();
 
     return (
         <ResponsiveContainer width="100%" height="100%">
-            <LineChart
+            <BarChart
                 data={intData}
                 margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
                 title="News Sentiment Score"
@@ -56,14 +58,14 @@ const SentimentChart = ({ data }) => {
                         borderRadius: "2px",
                     }}
                     itemStyle={{ fontStyle: "italic" }}
-                    label="hello"
                 />
                 <Legend />
-                <Line
+                <Bar
                     type="monotone"
                     dot={false}
                     dataKey="sentiment_score"
                     stroke={useColorModeValue("#413ea0", "#39FF14")}
+                    fill={useColorModeValue("#413ea0", "#39FF14")}
                     animationDuration={3000}
                 />
                 <ReferenceArea
@@ -86,7 +88,7 @@ const SentimentChart = ({ data }) => {
                     fillOpacity={0.1}
                     ifOverflow="hidden"
                 />
-            </LineChart>
+            </BarChart>
         </ResponsiveContainer>
     );
 };

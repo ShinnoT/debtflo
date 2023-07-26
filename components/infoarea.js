@@ -37,12 +37,17 @@ const InfoArea = () => {
     return (
         <Grid
             w="full"
-            templateRows="repeat(10, 1fr)"
-            templateColumns="repeat(11, 1fr)"
+            templateRows={{
+                base: "repeat(10, 1fr)",
+                md: "repeat(11, 1fr)",
+                lg: "repeat(10, 1fr)",
+            }}
+            templateColumns={{ base: "repeat(2, 1fr)", lg: "repeat(11, 1fr)" }}
             alignItems="stretch"
             gap={4}
             flexGrow={1}
-            pb={4}
+            // pb={4}
+            mb="50px"
         >
             <NewsItem data={allData} />
             <MetaData data={allData} />

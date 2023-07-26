@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import MainStatsDivider from "./stat-divider";
+import Card from "./card";
 import { NEWS_SENTIMENT } from "@/lib/sample-data";
 import { TriangleUpIcon } from "@chakra-ui/icons";
 import { useSearch } from "@/context/search";
@@ -62,59 +63,48 @@ const OverallNewsSentiment = ({ data }) => {
     }, [data]);
 
     return (
-        <GridItem
-            borderRadius={2}
-            colSpan={2}
-            rowSpan={4}
-            // boxShadow="base"
-            border="1px"
-            borderColor={useColorModeValue("gray.200", "gray.600")}
-            bg={useColorModeValue("#E3F4F4", "#393646")}
-            p={2}
+        <Card
+            rowSpan={{ base: 1, md: 2, lg: 4 }}
+            colSpan={{ base: 2, md: 1, lg: 2 }}
         >
-            <Box
-                py={2}
-                px={2}
-                bg={useColorModeValue("#E3F4F4", "#393646")}
-                h={0}
-                minH="100%"
-                overflowY="auto"
+            <Heading
+                as="h2"
+                size="md"
+                textAlign="center"
+                mb={4}
+                variant="section-title"
             >
-                <Heading
-                    as="h2"
-                    size="md"
-                    textAlign="center"
-                    mb={4}
-                    variant="section-title"
-                >
-                    Overall Sentiment
-                </Heading>
-                <Skeleton
-                    isLoaded={globalLoaded}
-                    fadeDuration={1}
-                    startColor="green.400"
-                    endColor="pink.400"
-                >
-                    <Stat>
-                        <StatNumber>
-                            {sentimentScore || "Placeholder"}
-                        </StatNumber>
-                        <StatHelpText>
-                            {sentimentLabel || "Placeholder"}{" "}
-                            {sentimentLabel && sentimentLabel !== "Neutral" && (
-                                <StatArrow
-                                    type={
-                                        sentimentScore > 0
-                                            ? "increase"
-                                            : "decrease"
-                                    }
-                                />
-                            )}
-                        </StatHelpText>
-                    </Stat>
-                </Skeleton>
-            </Box>
-        </GridItem>
+                Overall Sentiment
+            </Heading>
+            <Skeleton
+                isLoaded={globalLoaded}
+                fadeDuration={1}
+                startColor="green.400"
+                endColor="pink.400"
+            >
+                <Stat>
+                    <StatNumber>{sentimentScore || "Placeholder"}</StatNumber>
+                    <StatHelpText>
+                        {sentimentLabel || "Placeholder"}{" "}
+                        {sentimentLabel && sentimentLabel !== "Neutral" && (
+                            <StatArrow
+                                type={
+                                    sentimentScore > 0 ? "increase" : "decrease"
+                                }
+                            />
+                        )}
+                    </StatHelpText>
+                    <Text
+                        fontSize="10px"
+                        color={useColorModeValue("gray.500", "gray.400")}
+                        fontStyle="italic"
+                    >
+                        ** calculated simply by averaging sentiment scores of
+                        all news articles fetched from API
+                    </Text>
+                </Stat>
+            </Skeleton>
+        </Card>
     );
 };
 

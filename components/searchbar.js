@@ -5,7 +5,7 @@ import {
     InputRightElement,
     FormControl,
     Button,
-    useColorMode,
+    useColorModeValue,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 
@@ -38,7 +38,18 @@ const SearchBar = () => {
     }, [globalLoaded, globalError]);
 
     return (
-        <form style={{ width: "100%" }} onSubmit={handleSearch}>
+        <form
+            style={{
+                width: "100%",
+                // height: "50px",
+                position: "fixed",
+                bottom: 0,
+                left: 0,
+                padding: 10,
+                backgroundColor: useColorModeValue("#E3F4F4", "#393646"),
+            }}
+            onSubmit={handleSearch}
+        >
             <FormControl>
                 <InputGroup>
                     <InputLeftElement pointerEvents="none">

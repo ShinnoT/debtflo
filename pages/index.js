@@ -42,7 +42,12 @@ const Home = () => {
             <Flex
                 align="center"
                 justify="space-between"
-                height="calc(100vh - 50px)"
+                mt="50px"
+                height={{
+                    base: "calc(300vh - 50px)",
+                    md: "calc(200vh - 50px)",
+                    lg: "calc(100vh - 50px)",
+                }}
                 direction="column"
                 p={4}
                 w="100%"

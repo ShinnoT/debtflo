@@ -15,6 +15,7 @@ import {
     NEWS_SENTIMENT,
 } from "@/lib/sample-data";
 import ChartTabs from "./chart-tabs";
+import Card from "./card";
 import { useSearch } from "@/context/search";
 import { useLoaded } from "@/context/loading";
 
@@ -34,32 +35,14 @@ const VisualStats = ({ data }) => {
     }, [data]);
 
     return (
-        <GridItem
-            borderRadius={2}
-            colSpan={8}
-            rowSpan={6}
-            // boxShadow="base"
-            border="1px"
-            borderColor={useColorModeValue("gray.200", "gray.600")}
-            bg={useColorModeValue("#E3F4F4", "#393646")}
-            p={2}
-        >
-            <Box
-                py={2}
-                px={2}
-                bg={useColorModeValue("#E3F4F4", "#393646")}
-                h={0}
-                minH="100%"
-                overflowY="auto"
-            >
-                <ChartTabs
-                    priceData={price}
-                    newsData={data?.NEWS?.data?.feed}
-                    isPriceLoaded={globalLoaded}
-                    isNewsLoaded={globalLoaded}
-                />
-            </Box>
-        </GridItem>
+        <Card rowSpan={{ base: 2, md: 3, lg: 6 }} colSpan={{ base: 2, lg: 8 }}>
+            <ChartTabs
+                priceData={price}
+                newsData={data?.NEWS?.data?.feed}
+                isPriceLoaded={globalLoaded}
+                isNewsLoaded={globalLoaded}
+            />
+        </Card>
     );
 };
 
