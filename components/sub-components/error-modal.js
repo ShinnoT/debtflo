@@ -24,9 +24,9 @@ const ErrorModal = ({ title, children }) => {
     }, [title]);
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay />
-            <ModalContent>
+            <ModalContent m={4}>
                 <ModalHeader>{title}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>{children}</ModalBody>

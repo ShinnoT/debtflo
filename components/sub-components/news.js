@@ -7,7 +7,6 @@ import Card from "./card";
 import MainStatsDivider from "./stat-divider";
 
 const NewsItem = ({ data }) => {
-    console.log(data);
     const { globalLoaded } = useLoaded();
 
     const formattedDate = (date) => {
