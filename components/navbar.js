@@ -1,4 +1,4 @@
-import { Flex, Box, Heading, useColorModeValue } from "@chakra-ui/react";
+import { Flex, Heading, useColorModeValue } from "@chakra-ui/react";
 import ToggleButton from "./sub-components/theme-toggle";
 
 const NavBar = () => {

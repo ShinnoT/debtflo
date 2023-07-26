@@ -1,31 +1,16 @@
 import {
-    GridItem,
-    useColorModeValue,
-    Box,
     Heading,
-    Text,
-    Flex,
-    Stat,
-    StatLabel,
-    StatGroup,
-    StatNumber,
-    StatHelpText,
-    StatArrow,
-    Divider,
-    Stack,
-    StackDivider,
     Skeleton,
+    Stat,
+    StatArrow,
+    StatHelpText,
+    StatLabel,
+    StatNumber,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import axios from "axios";
 
-import MainStatsDivider from "./stat-divider";
-import Card from "./card";
-import { OVERVIEW } from "@/lib/sample-data";
-import { useSearch } from "@/context/search";
 import { useLoaded } from "@/context/loading";
-import { useGlobalError } from "@/context/error";
-import callAPI from "@/lib/handle-api";
+import Card from "./card";
+import MainStatsDivider from "./stat-divider";
 
 const BasicStats = ({ data }) => {
     const { globalLoaded } = useLoaded();

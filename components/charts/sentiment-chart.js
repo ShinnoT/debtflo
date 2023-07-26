@@ -1,18 +1,14 @@
-import { background, useColorModeValue, Heading } from "@chakra-ui/react";
+import { useColorModeValue } from "@chakra-ui/react";
 import {
-    LineChart,
-    BarChart,
     Bar,
-    Line,
+    BarChart,
+    CartesianGrid,
+    Legend,
+    ReferenceArea,
+    ResponsiveContainer,
     Tooltip,
     XAxis,
     YAxis,
-    ResponsiveContainer,
-    Legend,
-    CartesianGrid,
-    Text,
-    Label,
-    ReferenceArea,
 } from "recharts";
 
 const SentimentChart = ({ data }) => {

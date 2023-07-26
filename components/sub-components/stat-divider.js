@@ -1,4 +1,4 @@
-import { StackDivider, useColorModeValue, Stack } from "@chakra-ui/react";
+import { Stack, StackDivider, useColorModeValue } from "@chakra-ui/react";
 
 const MainStatsDivider = ({ children }) => {
     return (

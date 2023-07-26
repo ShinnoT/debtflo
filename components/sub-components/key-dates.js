@@ -1,24 +1,8 @@
-import {
-    GridItem,
-    useColorModeValue,
-    Box,
-    Heading,
-    Text,
-    Flex,
-    Divider,
-    Stack,
-    StackDivider,
-    Skeleton,
-} from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
+import { Heading, Skeleton, Stack, Text } from "@chakra-ui/react";
 
-import MainStatsDivider from "./stat-divider";
-import Card from "./card";
-import { OVERVIEW } from "@/lib/sample-data";
-import { useSearch } from "@/context/search";
 import { useLoaded } from "@/context/loading";
+import Card from "./card";
+import MainStatsDivider from "./stat-divider";
 
 const KeyDates = ({ data }) => {
     const { globalLoaded } = useLoaded();

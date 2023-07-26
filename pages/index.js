@@ -1,9 +1,9 @@
+import { Flex } from "@chakra-ui/react";
 import Head from "next/head";
-import { Flex, Text } from "@chakra-ui/react";
 
+import InfoArea from "@/components/infoarea";
 import NavBar from "@/components/navbar";
 import SearchBar from "@/components/searchbar";
-import InfoArea from "@/components/infoarea";
 import ErrorModal from "@/components/sub-components/error-modal";
 
 import { useGlobalError } from "@/context/error";

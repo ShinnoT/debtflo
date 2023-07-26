@@ -1,12 +1,11 @@
 import {
+    Box,
+    Skeleton,
     Tab,
     TabList,
-    Tabs,
     TabPanel,
     TabPanels,
-    Box,
-    useStyles,
-    Skeleton,
+    Tabs,
 } from "@chakra-ui/react";
 
 import PriceChart from "../charts/price-chart";

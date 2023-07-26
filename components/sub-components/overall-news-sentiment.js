@@ -1,30 +1,17 @@
 import {
-    GridItem,
-    useColorModeValue,
-    Box,
     Heading,
-    Text,
-    Flex,
-    Stat,
-    StatLabel,
-    StatGroup,
-    StatNumber,
-    StatHelpText,
-    StatArrow,
-    Divider,
-    Stack,
-    StackDivider,
     Skeleton,
+    Stat,
+    StatArrow,
+    StatHelpText,
+    StatNumber,
+    Text,
+    useColorModeValue,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import axios from "axios";
 
-import MainStatsDivider from "./stat-divider";
-import Card from "./card";
-import { NEWS_SENTIMENT } from "@/lib/sample-data";
-import { TriangleUpIcon } from "@chakra-ui/icons";
-import { useSearch } from "@/context/search";
 import { useLoaded } from "@/context/loading";
+import Card from "./card";
 
 const OverallNewsSentiment = ({ data }) => {
     const { globalLoaded } = useLoaded();

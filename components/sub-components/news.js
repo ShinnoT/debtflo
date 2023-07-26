@@ -1,27 +1,13 @@
-import {
-    Box,
-    GridItem,
-    useColorModeValue,
-    Heading,
-    Link,
-    Text,
-    Divider,
-    Stack,
-    StackDivider,
-    Skeleton,
-} from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { Heading, Link, Skeleton, Stack, Text } from "@chakra-ui/react";
 import { v4 as uuidv4 } from "uuid";
 
-import MainStatsDivider from "./stat-divider";
-import Card from "./card";
-import { NEWS_SENTIMENT } from "@/lib/sample-data";
-import { useSearch } from "@/context/search";
 import { useLoaded } from "@/context/loading";
+import Card from "./card";
+import MainStatsDivider from "./stat-divider";
 
 const NewsItem = ({ data }) => {
+    console.log(data);
     const { globalLoaded } = useLoaded();
 
     const formattedDate = (date) => {

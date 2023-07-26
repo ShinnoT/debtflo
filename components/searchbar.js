@@ -1,19 +1,19 @@
+import { SearchIcon } from "@chakra-ui/icons";
 import {
+    Button,
+    FormControl,
     Input,
     InputGroup,
     InputLeftElement,
     InputRightElement,
-    FormControl,
-    Button,
     useColorModeValue,
 } from "@chakra-ui/react";
-import { SearchIcon } from "@chakra-ui/icons";
 
 import { useEffect, useState } from "react";
 
+import { useGlobalError } from "@/context/error";
 import { useLoaded } from "@/context/loading";
 import { useSearch } from "@/context/search";
-import { useGlobalError } from "@/context/error";
 
 // TODO: fix autofocus not working issue
 

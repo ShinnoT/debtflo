@@ -1,23 +1,8 @@
-import {
-    GridItem,
-    useColorModeValue,
-    Box,
-    Heading,
-    Text,
-    Flex,
-} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import axios from "axios";
 
-import PriceChart from "../charts/price-chart";
-import {
-    TIME_SERIES_MONTHLY_ADJUSTED,
-    NEWS_SENTIMENT,
-} from "@/lib/sample-data";
-import ChartTabs from "./chart-tabs";
-import Card from "./card";
-import { useSearch } from "@/context/search";
 import { useLoaded } from "@/context/loading";
+import Card from "./card";
+import ChartTabs from "./chart-tabs";
 
 const VisualStats = ({ data }) => {
     const { globalLoaded } = useLoaded();

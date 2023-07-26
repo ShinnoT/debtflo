@@ -1,16 +1,16 @@
-import { Grid, GridItem, useColorModeValue } from "@chakra-ui/react";
+import { Grid } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
-import NewsItem from "./sub-components/news";
-import MetaData from "./sub-components/meta-data";
-import VisualStats from "./sub-components/visual-stats";
 import BasicStats from "./sub-components/basic-stats";
-import OverallNewsSentiment from "./sub-components/overall-news-sentiment";
 import KeyDates from "./sub-components/key-dates";
+import MetaData from "./sub-components/meta-data";
+import NewsItem from "./sub-components/news";
+import OverallNewsSentiment from "./sub-components/overall-news-sentiment";
+import VisualStats from "./sub-components/visual-stats";
 
-import { useSearch } from "@/context/search";
-import { useLoaded } from "@/context/loading";
 import { useGlobalError } from "@/context/error";
+import { useLoaded } from "@/context/loading";
+import { useSearch } from "@/context/search";
 import callAPI from "@/lib/handle-api";
 
 const InfoArea = () => {

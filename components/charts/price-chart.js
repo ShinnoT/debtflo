@@ -1,15 +1,14 @@
-import { background, useColorModeValue, Heading } from "@chakra-ui/react";
+import { useColorModeValue } from "@chakra-ui/react";
 import {
-    LineChart,
+    CartesianGrid,
+    Label,
+    Legend,
     Line,
+    LineChart,
+    ResponsiveContainer,
     Tooltip,
     XAxis,
     YAxis,
-    ResponsiveContainer,
-    Legend,
-    CartesianGrid,
-    Text,
-    Label,
 } from "recharts";
 
 const PriceChart = ({ data }) => {

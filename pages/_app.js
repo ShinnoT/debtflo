@@ -1,13 +1,13 @@
 import "@/styles/globals.css";
 
-import { ChakraProvider } from "@chakra-ui/react";
 import theme from "@/lib/theme";
+import { ChakraProvider } from "@chakra-ui/react";
 
 import { Roboto } from "next/font/google";
 
+import ErrorProvider from "@/context/error";
 import LoadingProvider from "@/context/loading";
 import SearchProvider from "@/context/search";
-import ErrorProvider from "@/context/error";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["100", "300"] });
 
